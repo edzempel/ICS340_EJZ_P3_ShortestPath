@@ -1,4 +1,4 @@
-package edu.metrostate.by8477ks;
+package edu.metrostate.by8477ks.ics340.p3;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

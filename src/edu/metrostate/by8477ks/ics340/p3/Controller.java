@@ -1,4 +1,4 @@
-package edu.metrostate.by8477ks;
+package edu.metrostate.by8477ks.ics340.p3;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,4 +1,4 @@
-package edu.metrostate.by8477ks;
+package edu.metrostate.by8477ks.ics340.p3;
 
 public class Main {
     public static void main(String[] args) {
