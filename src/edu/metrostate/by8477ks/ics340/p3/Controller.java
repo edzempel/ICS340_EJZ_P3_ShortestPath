@@ -86,16 +86,10 @@ public class Controller implements ActionListener {
             // Read header into memory
             TreeMap<String, Vertex> header = readHeaderLine(sourceFile); // O(n)
             // display header
-
-            view.ta1.append(header.keySet().toString());
+            view.ta1.append("\nCities: " + header.keySet().toString());
 
             // Reader rest of file into memory
-            ArrayList<Integer> listOfAmounts = readFileStartingAt(sourceFile, 1);
-            // Convert ArrayList to int[] O(n)
-            int[] intAmounts = new int[listOfAmounts.size()];
-            for (int i = 0; i < listOfAmounts.size(); i++) {
-                intAmounts[i] = listOfAmounts.get(i);
-            }
+            ArrayList<FloatingEdge> edges = readFileStartingAt(sourceFile, 1);
 
 
         }
@@ -158,23 +152,32 @@ public class Controller implements ActionListener {
      * @throws FileNotFoundException
      * @throws NumberFormatException
      */
-    public static ArrayList<Integer> readFileStartingAt(File userFile, int startingLine) throws
+    public static ArrayList<FloatingEdge> readFileStartingAt(File userFile, int startingLine) throws
             FileNotFoundException, NumberFormatException {
         Scanner myReader = new Scanner(userFile);
-        ArrayList<Integer> lineItems = new ArrayList<Integer>();
+
+        ArrayList<FloatingEdge> edges = new ArrayList<FloatingEdge>();
+
         int lineCount = 0;
         while (myReader.hasNextLine()) {
             if (lineCount >= startingLine) {
-                String data = myReader.nextLine();
-                lineItems.add(Integer.parseInt(data));
-                // System.out.println(data); // view each line of data
+                Scanner currentLine = new Scanner(myReader.nextLine());
+                currentLine.useDelimiter("-");
+
+                int weight = Integer.parseInt(currentLine.next());
+                String origin = currentLine.next();
+                String destination = currentLine.next();
+
+                edges.add(new FloatingEdge(origin, destination, weight));
+                edges.add(new FloatingEdge(destination, origin, weight));
+
             } else {
                 myReader.nextLine();
             }
             lineCount++;
         }
         myReader.close();
-        return lineItems;
+        return edges;
     }
 
 

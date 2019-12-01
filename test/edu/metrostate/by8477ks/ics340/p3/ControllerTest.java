@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
+import static edu.metrostate.by8477ks.ics340.p3.Controller.readFileStartingAt;
 import static edu.metrostate.by8477ks.ics340.p3.Controller.readHeaderLine;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,6 +44,15 @@ class ControllerTest {
     }
 
     @Test
-    void readFileStartingAt() {
+    void readFileStartingAtTest() {
+        try {
+            ArrayList<FloatingEdge> edges = readFileStartingAt(sourceFile, 1);
+            assertEquals(8, edges.size());
+            assertEquals("[Minneapolis to Anoka is 30, Anoka to Minneapolis is 30, Minneapolis to St. Paul is 20, St. Paul to Minneapolis is 20, Big Lake to Minneapolis is 40, Minneapolis to Big Lake is 40, St. Paul to Anoka is 30, Anoka to St. Paul is 30]", edges.toString());
+//            System.out.println(edges);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
