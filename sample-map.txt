@@ -1,0 +1,5 @@
+Anoka-St. Paul-Minneapolis-Big Lake
+30-Minneapolis-Anoka
+20-Minneapolis-St. Paul
+40-Big Lake-Minneapolis
+30-St. Paul-Anoka
