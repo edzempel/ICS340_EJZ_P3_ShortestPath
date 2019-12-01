@@ -41,6 +41,35 @@ class Edge {
     }
 }
 
+class FloatingEdge {
+    private String origin;
+    private String destination;
+    private int weight;
+
+    public FloatingEdge(String origin, String destination, int weight) {
+        this.origin = origin;
+        this.destination = destination;
+        this.weight = weight;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%s to %s is %d", origin, destination, weight);
+    }
+}
+
 class Dijkstra {
     public static void computePaths(Vertex source) {
         source.minDistance = 0.;
@@ -88,6 +117,7 @@ class Dijkstra {
         S.adjacencies = new Edge[]{new Edge(M, 20), new Edge(A, 30)};
         M.adjacencies = new Edge[]{new Edge(A, 30), new Edge(S, 20), new Edge(B, 40)};
 
+
         TreeMap<String, Vertex> cityMap = new TreeMap<String, Vertex>();
         cityMap.put(A.name, A);
         cityMap.put(B.name, B);
@@ -95,7 +125,6 @@ class Dijkstra {
         cityMap.put(S.name, S);
 
         Vertex.resetVertices(cityMap);
-        
 
         System.out.println("-------------------------");
 
