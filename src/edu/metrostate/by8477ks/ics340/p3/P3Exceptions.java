@@ -1,9 +1,9 @@
-package edu.metrostate.by8477ks.atm;
+package edu.metrostate.by8477ks.ics340.p3;
 
 /**
  * Shared exception classes
  */
-public class P2Exceptions {
+public class P3Exceptions {
 
     /**
      * A generic exception to give contextual feedback to the user
