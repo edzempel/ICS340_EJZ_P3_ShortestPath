@@ -9,9 +9,6 @@ import javax.swing.JPanel;
 
 class View {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     // declare components
     JTextField tf1;
