@@ -6,11 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+//import javax.swing.text.View;
 
 public class Controller implements ActionListener {
     private View view;
@@ -27,7 +27,8 @@ public class Controller implements ActionListener {
 
             // open and read file into memory as ArrayList
             try {
-                getSortAndWriteFile();
+                view.ta1.append("\nProcessing...");
+                processFiles();
             } catch (WrongFileTypeException wftex) {
                 view.ta1.append("\n" + wftex.getMessage());
             } catch (NumberFormatException nfex) {
@@ -39,6 +40,8 @@ public class Controller implements ActionListener {
             } catch (UnsupportedEncodingException useex) {
                 view.ta1.append("\n!!! File encoding unsupported. Use UTF-8 file.\n" + useex.getMessage());
                 useex.printStackTrace();
+            } catch (P3Exceptions.ImproperHeaderFileException ex) {
+                view.ta1.append("\n!!! Improper header.\n" + ex.getMessage());
             }
             view.ta1.append("\n--------------------------------");
 //            view.scrollPane.getVerticalScrollBar().setValue(view.scrollPane.getVerticalScrollBar().getMaximum());
@@ -54,7 +57,7 @@ public class Controller implements ActionListener {
      * @throws UnsupportedEncodingException
      * @throws WrongFileTypeException
      */
-    private void getSortAndWriteFile() throws FileNotFoundException, UnsupportedEncodingException, WrongFileTypeException {
+    private void processFiles() throws FileNotFoundException, UnsupportedEncodingException, WrongFileTypeException, P3Exceptions.ImproperHeaderFileException {
         //JFileChooser only allows text files
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.txt", "txt", "text");
@@ -64,14 +67,14 @@ public class Controller implements ActionListener {
         // Prompt user for file with JFileChooser
         int returnVal = chooser.showOpenDialog(view.frame.getParent());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File fileToSort = chooser.getSelectedFile();
-            if (!filter.accept(fileToSort)) {
+            File sourceFile = chooser.getSelectedFile();
+            if (!filter.accept(sourceFile)) {
                 throw new WrongFileTypeException("Wrong file type. Choose a .txt file.");
             }
-            String[] fullName = separateNameAndExtension(fileToSort);
+            String[] fullName = separateNameAndExtension(sourceFile);
             String fileName = fullName[0];
             String extension = fullName[1];
-            String fullPath = fileToSort.getPath();
+            String fullPath = sourceFile.getPath();
 
 
             // isolate directory from filename
@@ -80,32 +83,60 @@ public class Controller implements ActionListener {
             //update view
             view.tf1.setText("Input file: " + fileName + extension);
 
-            // Read file into memory
-            ArrayList<Integer> lineItems = readFileIntoMemory(fileToSort); // O(n)
+            // Read header into memory
+            TreeMap<String, Vertex> header = readHeaderLine(sourceFile); // O(n)
+            // display header
 
+            view.ta1.append(header.keySet().toString());
+
+            // Reader rest of file into memory
+            ArrayList<Integer> listOfAmounts = readFileStartingAt(sourceFile, 1);
             // Convert ArrayList to int[] O(n)
-            int[] intArray = new int[lineItems.size()];
-            for (int i = 0; i <lineItems.size(); i++) {
-                intArray[i] = lineItems.get(i);
+            int[] intAmounts = new int[listOfAmounts.size()];
+            for (int i = 0; i < listOfAmounts.size(); i++) {
+                intAmounts[i] = listOfAmounts.get(i);
             }
 
-            // Sort array in place O(n lg n)
-//            Model.mergesort(intArray, 0, intArray.length);
-
-            // Give the user feedback after successfully writing the sorted file
-            view.ta1.append("\n" + writeArrayToFile(directory, fileName + "_sorted" + extension, intArray)); // O(n)
 
         }
+    }
+
+
+    /**
+     * Returns an TreeMap of the vertexes for each city separated by spaces from the first line of the file
+     *
+     * @param userFile where the first line is a hyphen delimited list of values
+     * @return list of values from the first line of the file
+     * @throws FileNotFoundException
+     * @throws NumberFormatException
+     */
+    public static TreeMap<String, Vertex> readHeaderLine(File userFile) throws FileNotFoundException, NumberFormatException {
+        TreeMap<String, Vertex> header = new TreeMap<String, Vertex>();
+
+
+        try (Scanner myReader = new Scanner(userFile);
+             Scanner scanHeader = new Scanner(myReader.nextLine());) {
+            scanHeader.useDelimiter("-");
+
+            while (scanHeader.hasNext()) {
+                String city = scanHeader.next();
+                header.put(city, new Vertex(city));
+                // System.out.println(data); // view each element of the header
+            }
+        }
+
+        return header;
     }
 
     /**
      * Reads file into memory as an ArrayList O(n)
      *
      * @param userFile File
-     * @return ArrayList Integer
+     * @return list of each of the lines in the file
      * @throws FileNotFoundException
      */
-    public static ArrayList<Integer> readFileIntoMemory(File userFile) throws FileNotFoundException, NumberFormatException {
+    public static ArrayList<Integer> readFileIntoMemory(File userFile) throws
+            FileNotFoundException, NumberFormatException {
         Scanner myReader = new Scanner(userFile);
         ArrayList<Integer> lineItems = new ArrayList<Integer>();
         while (myReader.hasNextLine()) {
@@ -119,17 +150,58 @@ public class Controller implements ActionListener {
     }
 
     /**
+     * Reads file into memory as an ArrayList O(n) starting at specified line
+     *
+     * @param userFile
+     * @param startingLine
+     * @return
+     * @throws FileNotFoundException
+     * @throws NumberFormatException
+     */
+    public static ArrayList<Integer> readFileStartingAt(File userFile, int startingLine) throws
+            FileNotFoundException, NumberFormatException {
+        Scanner myReader = new Scanner(userFile);
+        ArrayList<Integer> lineItems = new ArrayList<Integer>();
+        int lineCount = 0;
+        while (myReader.hasNextLine()) {
+            if (lineCount >= startingLine) {
+                String data = myReader.nextLine();
+                lineItems.add(Integer.parseInt(data));
+                // System.out.println(data); // view each line of data
+            } else {
+                myReader.nextLine();
+            }
+            lineCount++;
+        }
+        myReader.close();
+        return lineItems;
+    }
+
+
+    /**
      * Write array of integers to the file in the specified directory. O(n)
      *
      * @param directory String path to file
      * @param filename  String name of file
      * @param array     int[] data to be written to the file line by line
+     * @return name of output file
      * @throws UnsupportedEncodingException
      */
-    public static String writeArrayToFile(String directory, String filename, int[] array) throws UnsupportedEncodingException, FileNotFoundException {
+    public static String writeArrayToFile(String directory, String filename, int[] array) throws
+            UnsupportedEncodingException, FileNotFoundException {
         PrintWriter writer = new PrintWriter(directory + filename, "UTF-8");
         for (int i = 0; i < array.length; i++) {
             writer.println(array[i]);
+        }
+        writer.close();
+        return String.format("Output file: %s", filename);
+    }
+
+    public static String writeArrayToFile(String directory, String filename, ArrayList<String> array) throws
+            UnsupportedEncodingException, FileNotFoundException {
+        PrintWriter writer = new PrintWriter(directory + filename, "UTF-8");
+        for (String entry : array) {
+            writer.println(String.format("%s-%s %d", "start city", "dest city", 10));
         }
         writer.close();
         return String.format("Output file: %s", filename);
