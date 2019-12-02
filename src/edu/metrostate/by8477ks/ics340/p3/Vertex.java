@@ -4,12 +4,13 @@ import java.util.*;
 
 class Vertex implements Comparable<Vertex> {
     public final String name;
-    public Edge[] adjacencies;
+    public ArrayList<Edge> adjacencies;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
 
     public Vertex(String argName) {
         name = argName;
+        adjacencies = new ArrayList<Edge>();
     }
 
     public String toString() {
@@ -25,6 +26,13 @@ class Vertex implements Comparable<Vertex> {
         ) {
             city.getValue().minDistance = Double.POSITIVE_INFINITY;
             city.getValue().previous = null;
+        }
+    }
+
+    public static void addEdges(TreeMap<String, Vertex> cityMap, ArrayList<FloatingEdge> floatingEdges) {
+        for (FloatingEdge floatingEdge : floatingEdges
+        ) {
+            cityMap.get(floatingEdge.getOrigin()).adjacencies.add(new Edge(cityMap.get(floatingEdge.getDestination()), floatingEdge.getWeight()));
         }
     }
 
@@ -65,7 +73,7 @@ class FloatingEdge {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("%s to %s is %d", origin, destination, weight);
     }
 }
@@ -112,10 +120,14 @@ class Dijkstra {
         Vertex B = new Vertex("Big Lake");
 
         // set the edges and weight
-        A.adjacencies = new Edge[]{new Edge(S, 30), new Edge(M, 30)};
-        B.adjacencies = new Edge[]{new Edge(M, 40)};
-        S.adjacencies = new Edge[]{new Edge(M, 20), new Edge(A, 30)};
-        M.adjacencies = new Edge[]{new Edge(A, 30), new Edge(S, 20), new Edge(B, 40)};
+        A.adjacencies.add(new Edge(S, 30));
+        A.adjacencies.add(new Edge(M, 30));
+        B.adjacencies.add(new Edge(M, 40));
+        S.adjacencies.add(new Edge(M, 20));
+        S.adjacencies.add(new Edge(A, 30));
+        M.adjacencies.add(new Edge(A, 30));
+        M.adjacencies.add(new Edge(S, 20));
+        M.adjacencies.add(new Edge(B, 40));
 
 
         TreeMap<String, Vertex> cityMap = new TreeMap<String, Vertex>();
