@@ -10,6 +10,8 @@ import java.util.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.printShortestPath;
 //import javax.swing.text.View;
 
 public class Controller implements ActionListener {
@@ -90,6 +92,17 @@ public class Controller implements ActionListener {
 
             // Reader rest of file into memory
             ArrayList<FloatingEdge> edges = readFileStartingAt(sourceFile, 1);
+
+            Vertex.addEdges(header, edges);
+
+            ArrayList<MapVertexCombo> allCombos = MapVertexCombo.getAllCombos(A, B, M, S);
+            for (MapVertexCombo<Vertex> combo : allCombos
+            ) {
+                Vertex.resetVertices(cityMap);
+                System.out.println(combo);
+                printShortestPath(combo.getMap().get(Dijkstra.VertexTypes.ORIGIN), combo.getMap().get(Dijkstra.VertexTypes.DESTINATION));
+                System.out.println();
+            }
 
 
         }
