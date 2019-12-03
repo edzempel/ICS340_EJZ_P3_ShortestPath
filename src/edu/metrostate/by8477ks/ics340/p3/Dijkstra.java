@@ -20,7 +20,7 @@ class Dijkstra {
                     vertexQueue.remove(v);
 
                     v.setMinDistance(distanceThroughU);
-                    v.previous = u;
+                    v.setPrevious(u);
                     vertexQueue.add(v);
                 }
             }
@@ -29,7 +29,7 @@ class Dijkstra {
 
     public static List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
-        for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
+        for (Vertex vertex = target; vertex != null; vertex = vertex.getPrevious())
             path.add(vertex);
 
         Collections.reverse(path);

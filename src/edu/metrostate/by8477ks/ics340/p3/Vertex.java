@@ -6,7 +6,7 @@ class Vertex implements Comparable<Vertex> {
     private final String name;
     private ArrayList<Edge> adjacencies;
     private double minDistance = Double.POSITIVE_INFINITY;
-    public Vertex previous;
+    private Vertex previous;
 
     public String getName() {
         return name;
