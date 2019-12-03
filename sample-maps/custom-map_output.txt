@@ -1,0 +1,10 @@
+Brainerd-Hutchinson-114
+Brainerd-Minneapolis-127
+Brainerd-St. Cloud-64
+Brainerd-Willmar-144
+Hutchinson-Minneapolis-60
+Hutchinson-St. Cloud-50
+Hutchinson-Willmar-49
+Minneapolis-St. Cloud-66
+Minneapolis-Willmar-109
+St. Cloud-Willmar-80
