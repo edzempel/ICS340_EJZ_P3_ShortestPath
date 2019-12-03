@@ -5,35 +5,50 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MapVertexCombo<V> {
-    EnumMap<Dijkstra.VertexTypes, V> map;
+/**
+ *
+ * @param <V>
+ */
+public class VertexPair<V> {
+    private EnumMap<VertexTypes, V> pair;
 
-    public EnumMap<Dijkstra.VertexTypes, V> getMap() {
-        return map;
+    /**
+     * Return vertex pair
+     * @return
+     */
+    public EnumMap<VertexTypes, V> getPair() {
+        return pair;
     }
 
-
-
-    public MapVertexCombo(V origin, V destination) {
-        map = new EnumMap<Dijkstra.VertexTypes, V>(Dijkstra.VertexTypes.class);
-        map.put(Dijkstra.VertexTypes.ORIGIN, origin);
-        map.put(Dijkstra.VertexTypes.DESTINATION, destination);
+    /**
+     * Constructor for VertexPair class
+     * @param origin
+     * @param destination
+     */
+    public VertexPair(V origin, V destination) {
+        pair = new EnumMap<VertexTypes, V>(VertexTypes.class);
+        pair.put(VertexTypes.ORIGIN, origin);
+        pair.put(VertexTypes.DESTINATION, destination);
     }
 
-
-    public static ArrayList<MapVertexCombo> getAllCombos(TreeMap<String, Vertex> vertices) {
+    /**
+     * Returns all size 2 combinations in the given set of vertices
+     * @param vertices TreeMap<String, Vertex> of vertices
+     * @return all combinations of vertices
+     */
+    public static ArrayList<VertexPair> getAllCombos(TreeMap<String, Vertex> vertices) {
 
         ArrayList<Vertex> list = new ArrayList<Vertex>();
-        for ( Map.Entry<String, Vertex> vertex : vertices.entrySet()
+        for (Map.Entry<String, Vertex> vertex : vertices.entrySet()
         ) {
             list.add(vertex.getValue());
         }
         int outputSize = list.size() * (list.size() - 1) / 2;
-        ArrayList<MapVertexCombo> output = new ArrayList<MapVertexCombo>();
+        ArrayList<VertexPair> output = new ArrayList<VertexPair>();
 
         for (int i = 0; i < list.size(); i++) {  // O(n * (n-1))
             for (int j = i + 1; j < list.size(); j++) {
-                output.add(new MapVertexCombo<Vertex>(list.get(i), list.get(j)));
+                output.add(new VertexPair<Vertex>(list.get(i), list.get(j)));
             }
         }
 
@@ -43,7 +58,13 @@ public class MapVertexCombo<V> {
 
     @Override
     public String toString() {
-        return this.map.get(Dijkstra.VertexTypes.ORIGIN) + " to  " + this.map.get(Dijkstra.VertexTypes.DESTINATION);
+        return this.pair.get(VertexTypes.ORIGIN) + " to  " + this.pair.get(VertexTypes.DESTINATION);
     }
 
+    /**
+     * Restricts vertices in VertexPair to origin and destination
+     */
+    public enum VertexTypes {
+        ORIGIN, DESTINATION;
+    }
 }
