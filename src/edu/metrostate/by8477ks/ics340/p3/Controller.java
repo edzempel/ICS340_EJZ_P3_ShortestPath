@@ -95,12 +95,12 @@ public class Controller implements ActionListener {
 
             Vertex.addEdges(header, edges);
 
-            ArrayList<MapVertexCombo> allCombos = MapVertexCombo.getAllCombos(A, B, M, S);
-            for (MapVertexCombo<Vertex> combo : allCombos
+            ArrayList<VertexPair> allCombos = VertexPair.getAllCombos(header);
+            for (VertexPair<Vertex> combo : allCombos
             ) {
-                Vertex.resetVertices(cityMap);
-                System.out.println(combo);
-                printShortestPath(combo.getMap().get(Dijkstra.VertexTypes.ORIGIN), combo.getMap().get(Dijkstra.VertexTypes.DESTINATION));
+                Vertex.resetVertices(header);
+                view.ta1.append("\n" + combo.toString());
+                printShortestPath(combo.getPair().get(VertexPair.VertexTypes.ORIGIN), combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
                 System.out.println();
             }
 
