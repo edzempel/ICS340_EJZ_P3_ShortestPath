@@ -12,8 +12,6 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.computePaths;
-import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.printShortestPath;
-//import javax.swing.text.View;
 
 public class Controller implements ActionListener {
     private View view;
@@ -45,7 +43,10 @@ public class Controller implements ActionListener {
                 useex.printStackTrace();
             } catch (P3Exceptions.ImproperHeaderFileException ex) {
                 view.ta1.append("\n!!! Improper header.\n" + ex.getMessage());
-            } catch (Exception ex) {
+            } catch (IllegalArgumentException ill){
+                view.ta1.append("\n!!! Bad input file:\n"+ill.getMessage());
+            }
+            catch (Exception ex) {
                 view.ta1.append("\n!!! Generic Error.\n" + ex.getMessage() + "\nSee console.");
                 ex.printStackTrace();
             }
@@ -62,7 +63,7 @@ public class Controller implements ActionListener {
      * @throws UnsupportedEncodingException
      * @throws WrongFileTypeException
      */
-    private void processFiles() throws FileNotFoundException, UnsupportedEncodingException, WrongFileTypeException, P3Exceptions.ImproperHeaderFileException {
+    private void processFiles() throws Exception {
         //JFileChooser only allows text files
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.txt", "txt", "text");
@@ -104,12 +105,14 @@ public class Controller implements ActionListener {
             ArrayList<VertexPair> allCombos = VertexPair.getAllPairs(header);
             for (VertexPair<Vertex> combo : allCombos
             ) {
-                Vertex.resetVertices(header);
-
                 Vertex origin = combo.getPair().get(VertexPair.VertexTypes.ORIGIN);
                 Vertex destination = combo.getPair().get(VertexPair.VertexTypes.DESTINATION);
-
-                computePaths(origin);
+                if (origin.getPrevious() != null){
+                    Vertex.resetVertices(header);
+                }
+                if(origin.getMinDistance() != 0.0){ // Only computePaths if the origin Vertex has not been set to zero
+                    computePaths(origin);
+                }
 //                printShortestPath(combo.getPair().get(VertexPair.VertexTypes.ORIGIN), combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
 
                 view.ta1.append(String.format("\n%s: %.0f", combo.toString(), destination.getMinDistance()));
