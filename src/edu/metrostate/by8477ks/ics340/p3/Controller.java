@@ -11,6 +11,7 @@ import java.util.*;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.computePaths;
 import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.printShortestPath;
 //import javax.swing.text.View;
 
@@ -44,6 +45,9 @@ public class Controller implements ActionListener {
                 useex.printStackTrace();
             } catch (P3Exceptions.ImproperHeaderFileException ex) {
                 view.ta1.append("\n!!! Improper header.\n" + ex.getMessage());
+            } catch (Exception ex) {
+                view.ta1.append("\n!!! Generic Error.\n" + ex.getMessage() + "\nSee console.");
+                ex.printStackTrace();
             }
             view.ta1.append("\n--------------------------------");
 //            view.scrollPane.getVerticalScrollBar().setValue(view.scrollPane.getVerticalScrollBar().getMaximum());
@@ -52,8 +56,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * Prompts user for file, merge sorts the integer  contents in descending order
-     * and writes the sorted data to a new file in the same directory
+     * Prompts user for file, displays all shortest paths and writes them to a file in the same directory
      *
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
@@ -90,20 +93,33 @@ public class Controller implements ActionListener {
             // display header
             view.ta1.append("\nCities: " + header.keySet().toString());
 
-            // Reader rest of file into memory
+            // Reader rest of file into memory as floating edges
             ArrayList<FloatingEdge> edges = readFileStartingAt(sourceFile, 1);
-
+            // add floating edges to each vertex in adjacency list
             Vertex.addEdges(header, edges);
+
+            // Create holding variable for file text
+            ArrayList<String> fileOutput = new ArrayList<String>();
 
             ArrayList<VertexPair> allCombos = VertexPair.getAllPairs(header);
             for (VertexPair<Vertex> combo : allCombos
             ) {
                 Vertex.resetVertices(header);
-                view.ta1.append("\n" + combo.toString());
-                printShortestPath(combo.getPair().get(VertexPair.VertexTypes.ORIGIN), combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
-                System.out.println();
+
+                Vertex origin = combo.getPair().get(VertexPair.VertexTypes.ORIGIN);
+                Vertex destination = combo.getPair().get(VertexPair.VertexTypes.DESTINATION);
+
+                computePaths(origin);
+//                printShortestPath(combo.getPair().get(VertexPair.VertexTypes.ORIGIN), combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
+
+                view.ta1.append(String.format("\n%s: %.0f", combo.toString(), destination.getMinDistance()));
+
+                fileOutput.add(String.format("%s-%s-%.0f", origin.getName(),
+                        destination.getName(),
+                        destination.getMinDistance()));
             }
 
+            writeArrayToFile(directory, fileName + "_output" + extension, fileOutput);
 
         }
     }
@@ -195,29 +211,20 @@ public class Controller implements ActionListener {
 
 
     /**
-     * Write array of integers to the file in the specified directory. O(n)
+     * Write array of strings to file line by line
      *
      * @param directory String path to file
-     * @param filename  String name of file
-     * @param array     int[] data to be written to the file line by line
-     * @return name of output file
+     * @param filename  String name of file including extension
+     * @param array     String data to be written to the file line by line
+     * @return Success message
      * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
      */
-    public static String writeArrayToFile(String directory, String filename, int[] array) throws
-            UnsupportedEncodingException, FileNotFoundException {
-        PrintWriter writer = new PrintWriter(directory + filename, "UTF-8");
-        for (int i = 0; i < array.length; i++) {
-            writer.println(array[i]);
-        }
-        writer.close();
-        return String.format("Output file: %s", filename);
-    }
-
     public static String writeArrayToFile(String directory, String filename, ArrayList<String> array) throws
             UnsupportedEncodingException, FileNotFoundException {
         PrintWriter writer = new PrintWriter(directory + filename, "UTF-8");
         for (String entry : array) {
-            writer.println(String.format("%s-%s %d", "start city", "dest city", 10));
+            writer.println(String.format("%s", entry));
         }
         writer.close();
         return String.format("Output file: %s", filename);

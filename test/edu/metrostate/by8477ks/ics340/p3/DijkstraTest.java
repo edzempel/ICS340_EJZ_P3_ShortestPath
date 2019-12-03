@@ -9,8 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
-import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.getShortestPathTo;
-import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.printShortestPath;
+import static edu.metrostate.by8477ks.ics340.p3.Dijkstra.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DijkstraTest {
@@ -53,14 +52,21 @@ class DijkstraTest {
         ArrayList<VertexPair> allCombos = VertexPair.getAllPairs(cityMap);
         ArrayList<String> comboStrings = new ArrayList<String>();
         ArrayList<String> pathStrings = new ArrayList<String>();
+        ArrayList<String> weightStrings = new ArrayList<String>();
 
         for (VertexPair<Vertex> combo : allCombos
         ) {
             Vertex.resetVertices(cityMap);
+            Vertex origin = combo.getPair().get(VertexPair.VertexTypes.ORIGIN);
+            computePaths(origin);
             comboStrings.add(combo.toString());
-            List<Vertex> path = getShortestPathTo(combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
+            Vertex destination = combo.getPair().get(VertexPair.VertexTypes.DESTINATION);
+            List<Vertex> path = getShortestPathTo(destination);
             pathStrings.add("Path: " + path);
-            printShortestPath(combo.getPair().get(VertexPair.VertexTypes.ORIGIN), combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
+            weightStrings.add(String.format("%.1f",destination.getMinDistance()));
+            System.out.println("--------------------");
+            System.out.println(combo);
+            printShortestPath(origin, destination);
 
         }
 
@@ -77,10 +83,13 @@ class DijkstraTest {
                 "Path: [Big Lake, Minneapolis]",
                 "Path: [Big Lake, Minneapolis, St. Paul]",
                 "Path: [Minneapolis, St. Paul]")), pathStrings);
+
+        assertEquals(new ArrayList<String>(Arrays.asList("70.0",
+                "30.0",
+                "30.0",
+                "40.0",
+                "60.0",
+                "20.0")), weightStrings);
     }
 
-    @Test
-    void getShortestPathToTest() {
-        fail();
-    }
 }
