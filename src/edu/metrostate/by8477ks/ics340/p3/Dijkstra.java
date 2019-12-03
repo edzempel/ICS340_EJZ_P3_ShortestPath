@@ -7,11 +7,17 @@ import java.util.PriorityQueue;
 import java.util.TreeMap;
 
 /**
- *Based on code from http://www.science.smith.edu/dftwiki/index.php/CSC212_Dijkstra%27s_Shortest_Path
- *
+ * Based on code from http://www.science.smith.edu/dftwiki/index.php/CSC212_Dijkstra%27s_Shortest_Path
+ * <p>
  * Finds shortest path to all other vertices in a directed or non directed graph with no negative cycles
  */
 class Dijkstra {
+    /**
+     * Compute the shortest path to all other vertices in the graph from the source vertex
+     * There is no need to rerun this algorithm if the source vertex has not changed.
+     * Instead, run getShortestPath on the desired target.
+     * @param source the starting or origin vertex
+     */
     public static void computePaths(Vertex source) {
         source.setMinDistance(0.);
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
@@ -22,8 +28,8 @@ class Dijkstra {
 
             // Visit each edge exiting u
             for (Edge e : u.getAdjacencies()) {
-                Vertex v = e.target;
-                double weight = e.weight;
+                Vertex v = e.getTarget();
+                double weight = e.getWeight();
                 double distanceThroughU = u.getMinDistance() + weight;
                 if (distanceThroughU < v.getMinDistance()) {
                     vertexQueue.remove(v);
@@ -36,6 +42,12 @@ class Dijkstra {
         }
     }
 
+    /**
+     * Iterate through all nodes starting at the target until the source is reached (has a previous value of null)
+     * Run resetVertices if the origin.previous != null
+     * @param target Vertex
+     * @return list of vertices in shortest path from origin to destination
+     */
     public static List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.getPrevious())
@@ -45,46 +57,11 @@ class Dijkstra {
         return path;
     }
 
-    public static void main(String[] args) {
-        // mark all the vertices
-        Vertex A = new Vertex("Anoka");
-        Vertex S = new Vertex("St. Paul");
-        Vertex M = new Vertex("Minneapolis");
-        Vertex B = new Vertex("Big Lake");
-
-        // set the edges and weight
-        A.getAdjacencies().add(new Edge(S, 30));
-        A.getAdjacencies().add(new Edge(M, 30));
-        B.getAdjacencies().add(new Edge(M, 40));
-        S.getAdjacencies().add(new Edge(M, 20));
-        S.getAdjacencies().add(new Edge(A, 30));
-        M.getAdjacencies().add(new Edge(A, 30));
-        M.getAdjacencies().add(new Edge(S, 20));
-        M.getAdjacencies().add(new Edge(B, 40));
-
-
-        TreeMap<String, Vertex> cityMap = new TreeMap<String, Vertex>();
-        cityMap.put(A.getName(), A);
-        cityMap.put(B.getName(), B);
-        cityMap.put(M.getName(), M);
-        cityMap.put(S.getName(), S);
-
-        Vertex.resetVertices(cityMap);
-
-        System.out.println("-------------------------");
-
-        ArrayList<VertexPair> allCombos = VertexPair.getAllPairs(cityMap);
-        for (VertexPair<Vertex> combo : allCombos
-        ) {
-            Vertex.resetVertices(cityMap);
-            System.out.println(combo);
-            printShortestPath(combo.getPair().get(VertexPair.VertexTypes.ORIGIN), combo.getPair().get(VertexPair.VertexTypes.DESTINATION));
-            System.out.println();
-        }
-
-    }
-
-
+    /**
+     * Brute force use of the Dijkstra class to do initial testing
+     * @param origin Vertex
+     * @param destination Vertex
+     */
     public static void printShortestPath(Vertex origin, Vertex destination) {
         computePaths(origin); // run Dijkstra
         System.out.println("Distance to " + destination + ": " + destination.getMinDistance());

@@ -32,6 +32,7 @@ public class VertexPair<V> {
     }
 
     /**
+     * (n*(n-1)/2) where n is number of cities has O(n^2)
      * Returns all size 2 combinations in the given set of vertices
      * @param vertices TreeMap<String, Vertex> of vertices
      * @return all combinations of vertices

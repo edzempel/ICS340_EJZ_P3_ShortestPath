@@ -145,8 +145,16 @@ class Vertex implements Comparable<Vertex> {
  * Edge class to use create adjacent edges for a given vertex
  */
 class Edge {
-    public final Vertex target;
-    public final double weight;
+    private final Vertex target;
+    private final double weight;
+
+    public Vertex getTarget() {
+        return target;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
 
     /**
      * Constructor for Edges. Add adjacent vertices to an origin vertex.
