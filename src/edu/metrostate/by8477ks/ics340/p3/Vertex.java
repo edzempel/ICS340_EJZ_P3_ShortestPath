@@ -4,7 +4,7 @@ import java.util.*;
 
 class Vertex implements Comparable<Vertex> {
     private final String name;
-    public ArrayList<Edge> adjacencies;
+    private ArrayList<Edge> adjacencies;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
 

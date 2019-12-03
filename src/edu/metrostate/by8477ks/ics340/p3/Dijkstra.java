@@ -12,7 +12,7 @@ class Dijkstra {
             Vertex u = vertexQueue.poll();
 
             // Visit each edge exiting u
-            for (Edge e : u.adjacencies) {
+            for (Edge e : u.getAdjacencies()) {
                 Vertex v = e.target;
                 double weight = e.weight;
                 double distanceThroughU = u.minDistance + weight;
@@ -44,14 +44,14 @@ class Dijkstra {
         Vertex B = new Vertex("Big Lake");
 
         // set the edges and weight
-        A.adjacencies.add(new Edge(S, 30));
-        A.adjacencies.add(new Edge(M, 30));
-        B.adjacencies.add(new Edge(M, 40));
-        S.adjacencies.add(new Edge(M, 20));
-        S.adjacencies.add(new Edge(A, 30));
-        M.adjacencies.add(new Edge(A, 30));
-        M.adjacencies.add(new Edge(S, 20));
-        M.adjacencies.add(new Edge(B, 40));
+        A.getAdjacencies().add(new Edge(S, 30));
+        A.getAdjacencies().add(new Edge(M, 30));
+        B.getAdjacencies().add(new Edge(M, 40));
+        S.getAdjacencies().add(new Edge(M, 20));
+        S.getAdjacencies().add(new Edge(A, 30));
+        M.getAdjacencies().add(new Edge(A, 30));
+        M.getAdjacencies().add(new Edge(S, 20));
+        M.getAdjacencies().add(new Edge(B, 40));
 
 
         TreeMap<String, Vertex> cityMap = new TreeMap<String, Vertex>();
