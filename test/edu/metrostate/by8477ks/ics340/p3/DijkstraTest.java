@@ -53,22 +53,42 @@ class DijkstraTest {
         ArrayList<String> comboStrings = new ArrayList<String>();
         ArrayList<String> pathStrings = new ArrayList<String>();
         ArrayList<String> weightStrings = new ArrayList<String>();
+        int plainCounter = 0;
+        int conditionalCounterReset = 0;
+        int conditionalCounterCompute = 0;
 
         for (VertexPair<Vertex> combo : allCombos
         ) {
-            Vertex.resetVertices(cityMap);
+
             Vertex origin = combo.getPair().get(VertexPair.VertexTypes.ORIGIN);
-            computePaths(origin);
-            comboStrings.add(combo.toString());
             Vertex destination = combo.getPair().get(VertexPair.VertexTypes.DESTINATION);
+            comboStrings.add(combo.toString());
+
+//            Vertex.resetVertices(cityMap);
+//            computePaths(origin);
+            plainCounter++;
+
+            if (origin.getPrevious() != null) {
+                Vertex.resetVertices(cityMap);
+                conditionalCounterReset++;
+            }
+            if (origin.getMinDistance() != 0.0) {
+                computePaths(origin);
+                conditionalCounterCompute++;
+            }
+
             List<Vertex> path = getShortestPathTo(destination);
             pathStrings.add("Path: " + path);
-            weightStrings.add(String.format("%.1f",destination.getMinDistance()));
+            weightStrings.add(String.format("%.1f", destination.getMinDistance()));
             System.out.println("--------------------");
             System.out.println(combo);
             printShortestPath(origin, destination);
 
         }
+
+        System.out.println("Plain: " + plainCounter);
+        System.out.println("Reset: " + conditionalCounterReset);
+        System.out.println("Compute: "+ conditionalCounterCompute);
 
         assertEquals(new ArrayList<String>(Arrays.asList("Anoka to  Big Lake",
                 "Anoka to  Minneapolis",
