@@ -2,6 +2,8 @@ package edu.metrostate.by8477ks.ics340.p3;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MapVertexCombo<V> {
     EnumMap<Dijkstra.VertexTypes, V> map;
@@ -19,19 +21,19 @@ public class MapVertexCombo<V> {
     }
 
 
-    public static <V> ArrayList<MapVertexCombo> getAllCombos(V... vertices) {
+    public static ArrayList<MapVertexCombo> getAllCombos(TreeMap<String, Vertex> vertices) {
 
-        ArrayList<V> list = new ArrayList<V>();
-        for (V vertex : vertices
+        ArrayList<Vertex> list = new ArrayList<Vertex>();
+        for ( Map.Entry<String, Vertex> vertex : vertices.entrySet()
         ) {
-            list.add(vertex);
+            list.add(vertex.getValue());
         }
         int outputSize = list.size() * (list.size() - 1) / 2;
         ArrayList<MapVertexCombo> output = new ArrayList<MapVertexCombo>();
 
         for (int i = 0; i < list.size(); i++) {  // O(n * (n-1))
             for (int j = i + 1; j < list.size(); j++) {
-                output.add(new MapVertexCombo<V>(list.get(i), list.get(j)));
+                output.add(new MapVertexCombo<Vertex>(list.get(i), list.get(j)));
             }
         }
 

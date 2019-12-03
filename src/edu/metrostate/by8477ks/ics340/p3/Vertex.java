@@ -140,7 +140,7 @@ class Dijkstra {
 
         System.out.println("-------------------------");
 
-        ArrayList<MapVertexCombo> allCombos = MapVertexCombo.getAllCombos(A, B, M, S);
+        ArrayList<MapVertexCombo> allCombos = MapVertexCombo.getAllCombos(cityMap);
         for (MapVertexCombo<Vertex> combo : allCombos
         ) {
             Vertex.resetVertices(cityMap);
@@ -152,7 +152,7 @@ class Dijkstra {
     }
 
 
-    private static void printShortestPath(Vertex origin, Vertex destination) {
+    public static void printShortestPath(Vertex origin, Vertex destination) {
         computePaths(origin); // run Dijkstra
         System.out.println("Distance to " + destination + ": " + destination.minDistance);
         List<Vertex> path = getShortestPathTo(destination);
