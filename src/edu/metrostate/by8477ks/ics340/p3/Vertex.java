@@ -2,6 +2,11 @@ package edu.metrostate.by8477ks.ics340.p3;
 
 import java.util.*;
 
+/**
+ * Based on code from http://www.science.smith.edu/dftwiki/index.php/CSC212_Dijkstra%27s_Shortest_Path
+ *
+ * Vertex class for creating vertices, adding adjacency lists, and resetting vertices
+ */
 class Vertex implements Comparable<Vertex> {
     private final String name;
     private ArrayList<Edge> adjacencies;
@@ -10,6 +15,7 @@ class Vertex implements Comparable<Vertex> {
 
     /**
      * Get Vertex name
+     *
      * @return
      */
     public String getName() {
@@ -18,6 +24,7 @@ class Vertex implements Comparable<Vertex> {
 
     /**
      * Get reference to Vertex adjacency list
+     *
      * @return
      */
     public ArrayList<Edge> getAdjacencies() {
@@ -26,6 +33,7 @@ class Vertex implements Comparable<Vertex> {
 
     /**
      * set vertex adjacency list
+     *
      * @param adjacencies
      */
     public void setAdjacencies(ArrayList<Edge> adjacencies) {
@@ -34,6 +42,7 @@ class Vertex implements Comparable<Vertex> {
 
     /**
      * Get current minimum distance to this vertex in the current graph after running Dijkstra.computePaths
+     *
      * @return
      */
     public double getMinDistance() {
@@ -42,6 +51,7 @@ class Vertex implements Comparable<Vertex> {
 
     /**
      * Set minimum distance for this vertex
+     *
      * @param minDistance
      */
     public void setMinDistance(double minDistance) {
@@ -51,6 +61,7 @@ class Vertex implements Comparable<Vertex> {
     /**
      * Get previous vertex to this vertex in the current graph after running Dijkstra.computePaths on the desired
      * origin vertex
+     *
      * @return
      */
     public Vertex getPrevious() {
@@ -60,6 +71,7 @@ class Vertex implements Comparable<Vertex> {
     /**
      * Set previous vertex to this vertex in the current graph after running Dijkstra.computePaths on the desired
      * origin vertex
+     *
      * @param previous
      */
     public void setPrevious(Vertex previous) {
@@ -68,6 +80,7 @@ class Vertex implements Comparable<Vertex> {
 
     /**
      * constructor for Vertex sets name and instantiates the adjacency list
+     *
      * @param argName
      */
     public Vertex(String argName) {

@@ -2,6 +2,11 @@ package edu.metrostate.by8477ks.ics340.p3;
 
 import java.util.*;
 
+/**
+ *Based on code from http://www.science.smith.edu/dftwiki/index.php/CSC212_Dijkstra%27s_Shortest_Path
+ *
+ * Finds shortest path to all other vertices in a directed or non directed graph with no negative cycles
+ */
 class Dijkstra {
     public static void computePaths(Vertex source) {
         source.setMinDistance(0.);
