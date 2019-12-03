@@ -3,24 +3,59 @@ package edu.metrostate.by8477ks.ics340.p3;
 import java.util.*;
 
 class Vertex implements Comparable<Vertex> {
-    public final String name;
+    private final String name;
     public ArrayList<Edge> adjacencies;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Edge> getAdjacencies() {
+        return adjacencies;
+    }
+
+    public void setAdjacencies(ArrayList<Edge> adjacencies) {
+        this.adjacencies = adjacencies;
+    }
+
+    public double getMinDistance() {
+        return minDistance;
+    }
+
+    public void setMinDistance(double minDistance) {
+        this.minDistance = minDistance;
+    }
+
+    public Vertex getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(Vertex previous) {
+        this.previous = previous;
+    }
 
     public Vertex(String argName) {
         name = argName;
         adjacencies = new ArrayList<Edge>();
     }
 
+    @Override
     public String toString() {
         return name;
     }
 
+    @Override
     public int compareTo(Vertex other) {
         return Double.compare(minDistance, other.minDistance);
     }
 
+    /**
+     * Reset the minimum distance and previous vertex after using shortest path
+     *
+     * @param cityMap TreeMap<String, Vertex> where String is the name of the given vertex
+     */
     public static void resetVertices(TreeMap<String, Vertex> cityMap) {
         for (Map.Entry<String, Vertex> city : cityMap.entrySet()
         ) {
@@ -29,6 +64,12 @@ class Vertex implements Comparable<Vertex> {
         }
     }
 
+    /**
+     * Uses List of Floating Edges to add adjacent edges to relevant vertex in a TreeMap of edges
+     *
+     * @param cityMap       TreeMap<String, Vertex> where String is the name of the given vertex
+     * @param floatingEdges name of origin, name of destination and weight of edge
+     */
     public static void addEdges(TreeMap<String, Vertex> cityMap, ArrayList<FloatingEdge> floatingEdges) {
         for (FloatingEdge floatingEdge : floatingEdges
         ) {
@@ -38,36 +79,71 @@ class Vertex implements Comparable<Vertex> {
 
 }
 
-
+/**
+ * Based on code from http://www.science.smith.edu/dftwiki/index.php/CSC212_Dijkstra%27s_Shortest_Path
+ * <p>
+ * Edge class to use create adjacent edges for a given vertex
+ */
 class Edge {
     public final Vertex target;
     public final double weight;
 
+    /**
+     * Constructor for Edges. Add adjacent vertices to an origin vertex.
+     *
+     * @param argTarget destination vertex
+     * @param argWeight weight of edge
+     */
     public Edge(Vertex argTarget, double argWeight) {
         target = argTarget;
         weight = argWeight;
     }
 }
 
+/**
+ * An intermediate class for creating edges without using the Vertex class
+ */
 class FloatingEdge {
     private String origin;
     private String destination;
     private int weight;
 
+    /**
+     * Constructor for creating floating edges
+     *
+     * @param origin      name of origin Vertex
+     * @param destination name of destination Vertex
+     * @param weight      of edge
+     */
     public FloatingEdge(String origin, String destination, int weight) {
         this.origin = origin;
         this.destination = destination;
         this.weight = weight;
     }
 
+    /**
+     * Get name of origin Vertex
+     *
+     * @return
+     */
     public String getOrigin() {
         return origin;
     }
 
+    /**
+     * Get name of destination Vertex
+     *
+     * @return
+     */
     public String getDestination() {
         return destination;
     }
 
+    /**
+     * Get weight of floating edge
+     *
+     * @return
+     */
     public int getWeight() {
         return weight;
     }
@@ -78,89 +154,3 @@ class FloatingEdge {
     }
 }
 
-class Dijkstra {
-    public static void computePaths(Vertex source) {
-        source.minDistance = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
-        vertexQueue.add(source);
-
-        while (!vertexQueue.isEmpty()) {
-            Vertex u = vertexQueue.poll();
-
-            // Visit each edge exiting u
-            for (Edge e : u.adjacencies) {
-                Vertex v = e.target;
-                double weight = e.weight;
-                double distanceThroughU = u.minDistance + weight;
-                if (distanceThroughU < v.minDistance) {
-                    vertexQueue.remove(v);
-
-                    v.minDistance = distanceThroughU;
-                    v.previous = u;
-                    vertexQueue.add(v);
-                }
-            }
-        }
-    }
-
-    public static List<Vertex> getShortestPathTo(Vertex target) {
-        List<Vertex> path = new ArrayList<Vertex>();
-        for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
-            path.add(vertex);
-
-        Collections.reverse(path);
-        return path;
-    }
-
-    public static void main(String[] args) {
-        // mark all the vertices
-        Vertex A = new Vertex("Anoka");
-        Vertex S = new Vertex("St. Paul");
-        Vertex M = new Vertex("Minneapolis");
-        Vertex B = new Vertex("Big Lake");
-
-        // set the edges and weight
-        A.adjacencies.add(new Edge(S, 30));
-        A.adjacencies.add(new Edge(M, 30));
-        B.adjacencies.add(new Edge(M, 40));
-        S.adjacencies.add(new Edge(M, 20));
-        S.adjacencies.add(new Edge(A, 30));
-        M.adjacencies.add(new Edge(A, 30));
-        M.adjacencies.add(new Edge(S, 20));
-        M.adjacencies.add(new Edge(B, 40));
-
-
-        TreeMap<String, Vertex> cityMap = new TreeMap<String, Vertex>();
-        cityMap.put(A.name, A);
-        cityMap.put(B.name, B);
-        cityMap.put(M.name, M);
-        cityMap.put(S.name, S);
-
-        Vertex.resetVertices(cityMap);
-
-        System.out.println("-------------------------");
-
-        ArrayList<MapVertexCombo> allCombos = MapVertexCombo.getAllCombos(cityMap);
-        for (MapVertexCombo<Vertex> combo : allCombos
-        ) {
-            Vertex.resetVertices(cityMap);
-            System.out.println(combo);
-            printShortestPath(combo.getMap().get(VertexTypes.ORIGIN), combo.getMap().get(VertexTypes.DESTINATION));
-            System.out.println();
-        }
-
-    }
-
-
-    public static void printShortestPath(Vertex origin, Vertex destination) {
-        computePaths(origin); // run Dijkstra
-        System.out.println("Distance to " + destination + ": " + destination.minDistance);
-        List<Vertex> path = getShortestPathTo(destination);
-        System.out.println("Path: " + path);
-    }
-
-
-    public enum VertexTypes {
-        ORIGIN, DESTINATION;
-    }
-}

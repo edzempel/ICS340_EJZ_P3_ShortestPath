@@ -33,10 +33,10 @@ class ControllerTest {
         try {
             TreeMap<String, Vertex> cityMap = readHeaderLine(sourceFile);
             assertEquals(4, cityMap.size());
-            assertEquals("Anoka", cityMap.get("Anoka").name);
-            assertEquals("Minneapolis", cityMap.get("Minneapolis").name);
-            assertEquals("Big Lake", cityMap.get("Big Lake").name);
-            assertEquals("St. Paul", cityMap.get("St. Paul").name);
+            assertEquals("Anoka", cityMap.get("Anoka").getName());
+            assertEquals("Minneapolis", cityMap.get("Minneapolis").getName());
+            assertEquals("Big Lake", cityMap.get("Big Lake").getName());
+            assertEquals("St. Paul", cityMap.get("St. Paul").getName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
