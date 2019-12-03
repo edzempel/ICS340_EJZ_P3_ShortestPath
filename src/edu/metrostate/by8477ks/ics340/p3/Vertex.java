@@ -8,34 +8,68 @@ class Vertex implements Comparable<Vertex> {
     private double minDistance = Double.POSITIVE_INFINITY;
     private Vertex previous;
 
+    /**
+     * Get Vertex name
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get reference to Vertex adjacency list
+     * @return
+     */
     public ArrayList<Edge> getAdjacencies() {
         return adjacencies;
     }
 
+    /**
+     * set vertex adjacency list
+     * @param adjacencies
+     */
     public void setAdjacencies(ArrayList<Edge> adjacencies) {
         this.adjacencies = adjacencies;
     }
 
+    /**
+     * Get current minimum distance to this vertex in the current graph after running Dijkstra.computePaths
+     * @return
+     */
     public double getMinDistance() {
         return minDistance;
     }
 
+    /**
+     * Set minimum distance for this vertex
+     * @param minDistance
+     */
     public void setMinDistance(double minDistance) {
         this.minDistance = minDistance;
     }
 
+    /**
+     * Get previous vertex to this vertex in the current graph after running Dijkstra.computePaths on the desired
+     * origin vertex
+     * @return
+     */
     public Vertex getPrevious() {
         return previous;
     }
 
+    /**
+     * Set previous vertex to this vertex in the current graph after running Dijkstra.computePaths on the desired
+     * origin vertex
+     * @param previous
+     */
     public void setPrevious(Vertex previous) {
         this.previous = previous;
     }
 
+    /**
+     * constructor for Vertex sets name and instantiates the adjacency list
+     * @param argName
+     */
     public Vertex(String argName) {
         name = argName;
         adjacencies = new ArrayList<Edge>();
