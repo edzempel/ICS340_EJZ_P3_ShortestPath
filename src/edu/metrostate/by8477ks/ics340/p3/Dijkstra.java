@@ -64,7 +64,7 @@ class Dijkstra {
 
         System.out.println("-------------------------");
 
-        ArrayList<VertexPair> allCombos = VertexPair.getAllCombos(cityMap);
+        ArrayList<VertexPair> allCombos = VertexPair.getAllPairs(cityMap);
         for (VertexPair<Vertex> combo : allCombos
         ) {
             Vertex.resetVertices(cityMap);

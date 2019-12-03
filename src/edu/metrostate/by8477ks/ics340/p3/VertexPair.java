@@ -36,7 +36,7 @@ public class VertexPair<V> {
      * @param vertices TreeMap<String, Vertex> of vertices
      * @return all combinations of vertices
      */
-    public static ArrayList<VertexPair> getAllCombos(TreeMap<String, Vertex> vertices) {
+    public static ArrayList<VertexPair> getAllPairs(TreeMap<String, Vertex> vertices) {
 
         ArrayList<Vertex> list = new ArrayList<Vertex>();
         for (Map.Entry<String, Vertex> vertex : vertices.entrySet()

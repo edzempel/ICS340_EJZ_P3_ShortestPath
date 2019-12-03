@@ -95,7 +95,7 @@ public class Controller implements ActionListener {
 
             Vertex.addEdges(header, edges);
 
-            ArrayList<VertexPair> allCombos = VertexPair.getAllCombos(header);
+            ArrayList<VertexPair> allCombos = VertexPair.getAllPairs(header);
             for (VertexPair<Vertex> combo : allCombos
             ) {
                 Vertex.resetVertices(header);
