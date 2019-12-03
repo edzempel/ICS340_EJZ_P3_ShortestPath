@@ -4,7 +4,7 @@ import java.util.*;
 
 class Dijkstra {
     public static void computePaths(Vertex source) {
-        source.minDistance = 0.;
+        source.setMinDistance(0.);
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
         vertexQueue.add(source);
 
@@ -15,11 +15,11 @@ class Dijkstra {
             for (Edge e : u.getAdjacencies()) {
                 Vertex v = e.target;
                 double weight = e.weight;
-                double distanceThroughU = u.minDistance + weight;
-                if (distanceThroughU < v.minDistance) {
+                double distanceThroughU = u.getMinDistance() + weight;
+                if (distanceThroughU < v.getMinDistance()) {
                     vertexQueue.remove(v);
 
-                    v.minDistance = distanceThroughU;
+                    v.setMinDistance(distanceThroughU);
                     v.previous = u;
                     vertexQueue.add(v);
                 }
@@ -78,7 +78,7 @@ class Dijkstra {
 
     public static void printShortestPath(Vertex origin, Vertex destination) {
         computePaths(origin); // run Dijkstra
-        System.out.println("Distance to " + destination + ": " + destination.minDistance);
+        System.out.println("Distance to " + destination + ": " + destination.getMinDistance());
         List<Vertex> path = getShortestPathTo(destination);
         System.out.println("Path: " + path);
     }
