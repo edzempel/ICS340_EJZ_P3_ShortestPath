@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- *
+ * Create Vertex pairs with a specific origin and destination
  * @param <V>
  */
 public class VertexPair<V> {
@@ -65,6 +65,6 @@ public class VertexPair<V> {
      * Restricts vertices in VertexPair to origin and destination
      */
     public enum VertexTypes {
-        ORIGIN, DESTINATION;
+        ORIGIN, DESTINATION
     }
 }

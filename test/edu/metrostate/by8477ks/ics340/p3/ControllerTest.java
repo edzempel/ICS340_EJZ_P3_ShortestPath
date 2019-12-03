@@ -14,7 +14,7 @@ import static edu.metrostate.by8477ks.ics340.p3.Controller.readHeaderLine;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
-    File sourceFile;
+    private File sourceFile;
     private String filePath = "C:\\Users\\meanderthalz\\Documents\\test_files\\p3test\\sample-map.txt";
 
     @BeforeEach

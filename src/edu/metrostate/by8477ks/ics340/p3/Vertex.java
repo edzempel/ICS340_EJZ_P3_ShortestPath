@@ -1,10 +1,12 @@
 package edu.metrostate.by8477ks.ics340.p3;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Based on code from http://www.science.smith.edu/dftwiki/index.php/CSC212_Dijkstra%27s_Shortest_Path
- *
+ * <p>
  * Vertex class for creating vertices, adding adjacency lists, and resetting vertices
  */
 class Vertex implements Comparable<Vertex> {
@@ -16,7 +18,7 @@ class Vertex implements Comparable<Vertex> {
     /**
      * Get Vertex name
      *
-     * @return
+     * @return vertex name
      */
     public String getName() {
         return name;
@@ -25,7 +27,7 @@ class Vertex implements Comparable<Vertex> {
     /**
      * Get reference to Vertex adjacency list
      *
-     * @return
+     * @return Vertex adjacency list
      */
     public ArrayList<Edge> getAdjacencies() {
         return adjacencies;
@@ -117,10 +119,21 @@ class Vertex implements Comparable<Vertex> {
      * @param cityMap       TreeMap<String, Vertex> where String is the name of the given vertex
      * @param floatingEdges name of origin, name of destination and weight of edge
      */
-    public static void addEdges(TreeMap<String, Vertex> cityMap, ArrayList<FloatingEdge> floatingEdges) {
+    public static void addEdges(TreeMap<String, Vertex> cityMap, ArrayList<FloatingEdge> floatingEdges) throws IllegalArgumentException {
         for (FloatingEdge floatingEdge : floatingEdges
         ) {
-            cityMap.get(floatingEdge.getOrigin()).adjacencies.add(new Edge(cityMap.get(floatingEdge.getDestination()), floatingEdge.getWeight()));
+            Vertex origin = cityMap.get(floatingEdge.getOrigin());
+            Vertex destination = cityMap.get(floatingEdge.getDestination());
+            if (origin != null && destination != null)
+                origin.adjacencies.add(new Edge(destination, floatingEdge.getWeight()));
+            else{
+                String errorMsg = "";
+                if(origin == null)
+                    errorMsg += floatingEdge.getOrigin();
+                if(destination == null)
+                    errorMsg += errorMsg.isEmpty() ? floatingEdge.getDestination() : ", " + floatingEdge.getDestination();
+                throw new IllegalArgumentException(String.format("Invalid city name(s) %s.", errorMsg));
+            }
         }
     }
 
